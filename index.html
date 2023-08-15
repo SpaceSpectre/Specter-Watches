@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Specter Watches</title>
+        <link rel="stylesheet" href="style.css"/>
+    </head>
+    <body>
+        <header class="primary-header flex">
+            <div>
+                <img src="images/logo.svg" id="navLogoImg" class="logo"/>
+            </div>
+
+
+            <button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false"><span class="sr-only"></span></button>
+            <nav>
+                <ul id="primary-navigation" data-visible="false" class="primary-navigation flex">
+                    <li class="active">
+                        <a href="#">
+                            <span aria-hidden="true">00</span>Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span aria-hidden="true">01</span>Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span aria-hidden="true">02</span>Contact Us
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span aria-hidden="true">03</span>About
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span aria-hidden="true">04</span>Login
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <banner>
+            <img src="images/cccoil.svg" id="bannerImg"/>
+        </banner>
+
+        <div id="CRUD">
+            <h1>Products</h1>
+            <div id="products"></div>
+            <h1>Add Products</h1>
+            <form id="product-form">
+                <label>Brand:</label>
+                <input type="text" id="brand" required><br>
+                <label>Model:</label>
+                <input type="text" id="model" required><br>
+                <label>Price:</label>
+                <input type="number" id="price" required><br>
+                <label>Category:</label>
+                <select id="category" required>
+                    <option value="Chronograph">Chronograph</option>
+                    <option value="Digital">Digital</option>
+                    <option value="Diver">Diver</option>
+                    <option value="Analog">Analog</option>
+                    <option value="Smartwatch">Smartwatch</option>
+                </select><br>
+                <label>In Stock:</label>
+                <input type="checkbox" id="inStock"><br>
+                <label>Image Url:</label>
+                <input type="text" id="url" required><br>
+                <input type="submit" value="Add Product">
+            </form><br>
+            <h1>Update Products</h1>
+            <form id="update-form">
+                <label>Existing Products</label>
+                <select id="prod-list-update" required onchange="listUpdate()"></select><br><br>
+                <label>Brand:</label>
+                <input type="text" id="u_brand" required><br>
+                <label>Model:</label>
+                <input type="text" id="u_model" required><br>
+                <label>Price:</label>
+                <input type="number" id="u_price" required><br>
+                <label>Category:</label>
+                <select id="u_category" required>
+                    <option value="Chronograph">Chronograph</option>
+                    <option value="Digital">Digital</option>
+                    <option value="Diver">Diver</option>
+                    <option value="Analog">Analog</option>
+                    <option value="Smartwatch">Smartwatch</option>
+                </select><br>
+                <label>In Stock:</label>
+                <input type="checkbox" id="u_inStock"><br>
+                <label>Image Url:</label>
+                <input type="text" id="u_url" required><br>
+                <input type="submit" value="Update Product">
+            </form>
+
+            <h1>Delete Products</h1>
+            <form id="delete-form">
+                <label>Product</label>
+                <select id="prod-list-delete" required></select><br>
+                <input type="submit" value="Delete Product">
+            </form>
+
+            <h1>Search Products</h1>
+            <form id="search-form">
+                <label>Search By:</label>
+                <select id="s_category" required>
+                    <option value="s_all">All</option>
+                    <option value="s_brand">Brand</option>
+                    <option value="s_model">Model</option>
+                    <option value="s_price">Price</option>
+                    <option value="s_inStock">In Stock</option>
+                </select><br>
+                <label>Product:</label>
+                <input type="text" id="search-input" required>
+                <input type="submit" value="Search">
+            </form>
+            <div id="search-results"></div>
+            
+        </div>
+        
+        <!-- <script>
+            function loadProducts() 
+            {
+                fetch('/products').then(res => res.json()).then(data => {
+                    const productsDiv = document.getElementById('products');
+                    const productsDropUpdate = document.getElementById('prod-list-update');
+                    const productsDropDelete = document.getElementById('prod-list-delete');
+                    productsDiv.innerHTML = '';
+                    productsDropUpdate.innerHTML = '';
+                    productsDropDelete.innerHTML = '';
+                    data.forEach(product => {
+                        const productDiv = document.createElement('div');
+                        const productDropUpdate = document.createElement('option');
+                        const productDropDelete = document.createElement('option');
+                        productDiv.innerHTML = '<img src=" ' + product.url + ' " style="max-height:200px"> <br>' + product.brand + ' - ' + product.model + ' - ' + product.price + ' - ' + product.category + '- In Stock:' + product.inStock;
+                        productsDiv.appendChild(productDiv);
+                        productDropUpdate.innerHTML = product.brand + ' - ' + product.model;
+                        productDropDelete.innerHTML = product.brand + ' - ' + product.model;
+                        productDropUpdate.value = product._id;
+                        productDropDelete.value = product._id;
+                        productsDropUpdate.appendChild(productDropUpdate);
+                        productsDropDelete.appendChild(productDropDelete);
+                    });
+                });
+            }
+
+            function listUpdate() 
+            {
+                const brand = document.getElementById('u_brand');
+                const model = document.getElementById('u_model');
+                const price = document.getElementById('u_price');
+                const category = document.getElementById('u_category');
+                const inStock = document.getElementById('u_inStock');
+                const url = document.getElementById('u_url');
+                const id = document.getElementById('prod-list-update').value;
+
+                fetch(`/products/${id}`).then(res => res.json()).then(data => {
+                    console.log();
+                    brand.value = data.brand;
+                    model.value = data.model;
+                    price.value = data.price;
+                    category.value = data.category;
+                    inStock.checked = data.inStock;
+                    url.value = data.url;
+                });
+            }
+
+            document.getElementById('search-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const searchValue = document.getElementById('search-input').value;
+                const searchCatagory = document.getElementById('s_category').value;
+
+                if(searchCatagory == "All")
+                {
+                    
+                }
+
+            });
+            document.getElementById('update-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const id = document.getElementById('prod-list-update').value;
+                const product = {
+                    brand: document.getElementById('u_brand').value,
+                    model: document.getElementById('u_model').value,
+                    price: document.getElementById('u_price').value,
+                    category: document.getElementById('u_category').value,
+                    inStock: document.getElementById('u_inStock').checked,
+                    url: document.getElementById('u_url').value,
+                };
+
+                fetch(`/products/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(product),
+                })
+                .then(() => {
+                    document.getElementById('update-form').reset();
+                });
+
+            });
+
+            document.getElementById('delete-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const id = document.getElementById('prod-list-delete').value;
+                
+                fetch(`/products/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(() => {
+                    document.getElementById('delete-form').reset();
+                    loadProducts();
+                });
+            });
+
+            document.getElementById('product-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const product = {
+                    brand: document.getElementById('brand').value,
+                    model: document.getElementById('model').value,
+                    price: document.getElementById('price').value,
+                    category: document.getElementById('category').value,
+                    inStock: document.getElementById('inStock').checked,
+                    url: document.getElementById('url').value,
+                };
+
+                fetch('/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(product),
+                })
+                .then(() => {
+                    loadProducts();
+                    document.getElementById('product-form').reset();
+                });
+            });
+
+            loadProducts();
+        </script> -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="/script.js"></script>
+    </body>
+    </html>
